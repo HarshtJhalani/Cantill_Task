@@ -1,0 +1,11 @@
+pandas>=2.2
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.5
+rapidfuzz>=3.9
+PyYAML>=6.0
+pydantic>=2.6
+sentence-transformers>=3.0
+torch>=2.3
+# optional: LLM labelling when ANTHROPIC_API_KEY is set
+# anthropic>=1.0

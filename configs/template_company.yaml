@@ -1,0 +1,52 @@
+# Template for a new company (e.g. the blind-test Company C). Copy, rename, fill in.
+company: C
+reporting_currency: USD
+data_dir: ../company_C              # or pass --data-dir
+
+taxonomy:
+  file: taxonomy_C.csv              # level columns detected by trailing number (l1..l4)
+  # hints:                          # optional keywords per leaf (leaf name -> words), helps zero-shot
+  #   "Leaf name": "keyword, keyword"
+
+sources:
+  - name: AP
+    file: invoice_lines.csv
+    role: primary
+    id: line_id                     # output record_id = id_prefix + this column
+    id_prefix: ""
+    columns:
+      amount: line_amount
+      currency: currency            # omit and set `currency:` below if single-currency
+      # fx_rate: currency_rate      # units of currency per 1 reporting unit, if present
+      # vat_rate: vat_rate          # only with amount_is_gross: true
+      date: invoice_date
+      # fallback_date: posting_date
+      supplier_name: supplier_name
+      # supplier_id: vendor_id
+      description: [line_description]
+      # material: material_number
+      # po: po_number
+      # invoice_number: invoice_number
+      # invoice_line: invoice_line
+      # status: status
+      # gl_text: [gl_account_description]
+      context: []                   # extra text columns that help classification (GL text, material group...)
+    amount_is_gross: false
+    # default_vat_rate: 0.15
+    # currency: USD                 # fixed currency for the whole source
+    # decimal: ","                  # force decimal comma if amounts are European-formatted
+
+# fx:                               # monthly rates table, units of currency per 1 reporting unit
+#   file: fx_rates_usd.csv
+#   currency: currency
+#   month: month
+#   rate: units_per_usd
+
+# duplicates:                       # within-file repeated lines; default key is invoice+supplier+amount+qty
+#   keys: [invoice_number, invoice_line, supplier_id, amount_raw]
+
+# extra_exclusion_rules:            # appended to the defaults
+#   - name: example
+#     reason: NON_PROCUREMENT
+#     fields: [description, gl_text]
+#     pattern: 'some regex'

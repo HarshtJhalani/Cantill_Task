@@ -1,0 +1,16 @@
+# confidential task data: never commit
+company_*/
+*.pdf
+output_template.csv
+data/
+*.xlsx
+# working outputs and diagnostics (only final outputs are committed, see output/)
+output/*_diagnostics.csv
+output/dev__*
+output/*.holdout_ids
+cache/
+__pycache__/
+*.pyc
+.venv/
+.env
+output/*.log

@@ -1,0 +1,67 @@
+# Company A: mining operations, two systems (SAP goods receipts + AP invoice tool)
+company: A
+reporting_currency: ZAR
+data_dir: ../company_A            # relative to this config file; override with --data-dir
+
+taxonomy:
+  file: taxonomy_A.csv            # level columns are detected in order (category_l1, l2, ...)
+
+sources:
+  - name: ERP
+    file: erp_goods_receipts.csv
+    role: primary                 # primary records win when the same purchase is in two systems
+    id: line_id
+    id_prefix: "ERP:"
+    columns:
+      amount: value_zar
+      date: posting_date
+      supplier_name: supplier_name
+      supplier_id: vendor_id
+      description: [material_short_text, service_short_text]
+      material: material_number
+      po: po_number
+      po_line: po_item
+      quantity: quantity
+      context: [spend_type, material_type]   # extra text used only by the classifier
+    amount_is_gross: false
+    currency: ZAR                 # value_zar is already in the reporting currency
+
+  - name: TOOL
+    file: invoice_tool_export.csv
+    role: secondary
+    id: tool_record_id
+    id_prefix: "TOOL:"
+    columns:
+      amount: gross_amount
+      vat_rate: vat_rate
+      date: invoice_date
+      supplier_name: supplier_name_as_captured
+      description: line_text
+      po: po_reference
+      quantity: quantity
+      invoice_number: invoice_number
+      status: status
+      currency: currency
+    amount_is_gross: true
+    default_vat_rate: 0.15
+    po_pattern: '(\d{10})'        # PO refs come as 4510.., PO#4510.., PO 4510.., 4510../10.0
+    po_line_pattern: '\d{10}\s*/\s*(\d+)'
+    ocr_text: true                # line_text is OCR'd: normalise 0/O, 5/S, 1/I, 8/B when comparing
+
+dates:
+  formats: ["%Y-%m-%d", "%d/%m/%Y", "%d-%b-%y", "%d-%b-%Y", "%Y/%m/%d"]
+  dayfirst: true
+  valid_range: ["2015-01-01", "2026-12-31"]
+
+matching:                         # cross-system "count once"
+  amount_tolerance: 0.01          # relative tolerance on net amount
+  po_amount_tolerance: 0.25       # looser tolerance when PO matches and text agrees
+  min_text_similarity: 70
+  min_supplier_similarity: 70
+
+labels:
+  file: labels_A.csv
+  id: record_id
+  category: [category_l1, category_l2, category_l3]
+  supplier_key: supplier_key
+  item_key: item_key

@@ -1,0 +1,152 @@
+# Defaults merged under every company config (company values win).
+# Nothing here names a category: these are spend-scope rules, not classification.
+
+status:
+  # matched case-insensitively as regexes against the status column, first hit wins
+  CANCELLED: ['cancel', 'void', 'reversed', 'storn']
+  NOT_APPROVED: ['not\s*approv', 'unapprov', 'reject', 'hold', 'submit', 'disput', 'pending', 'draft', 'park', 'open', 'block', 'await', 'review']
+  INCLUDE: ['paid', 'approv', 'posted', 'clear', 'complete', 'settled', '^ok$']
+  unknown_status: NOT_APPROVED     # a status we don't recognise is not approved or paid
+
+exclusion_rules:
+  # Each rule: regex (case-insensitive) on the listed canonical fields.
+  # fields: description, gl_text, supplier_name, context
+  - name: intercompany_gl
+    reason: NON_PROCUREMENT
+    fields: [gl_text]
+    pattern: '^\s*IC\s*\d|\bI/?C\b|inter[\s-]?co|intercompany|related part'
+    propagate_vendor: true          # a vendor booked mostly to intercompany accounts is intercompany
+  - name: intercompany_text
+    reason: NON_PROCUREMENT
+    fields: [description, supplier_name]
+    pattern: 'inter[\s-]?company|\bintra[\s-]?group\b|related party'
+    propagate_vendor: true
+  - name: taxes
+    reason: NON_PROCUREMENT
+    fields: [description, gl_text]
+    pattern: '^\W*(state\s*&?\s*local\s*tax|sales\s*tax|use\s*tax|gst|hst|pst|vat|iva|tva|mwst|ust|withholding|income\s*tax|excise|customs\s*duty\s*refund|tax(es)?)\b(?!\s*(consult|advis|service|software|audit))|\b(sales|use|withholding|income|property|payroll|stamp)\s+tax\b(?!\s*(consult|advis|service|software|audit))|\btax\s+(expense|payable|payment|liabilit|adjust)|\bgst\s+input|\bvat\s+(payable|payment|return|adjust)'
+  - name: finance_and_payroll
+    reason: NON_PROCUREMENT
+    fields: [description, gl_text]
+    pattern: '\b(interest\s+(charge|expense|paid|on)|loan\s+(repay|interest)|bank\s+(charge|fee)s?|dividend|royalt(y|ies)|penalt(y|ies)\s+(interest|tax)|salar(y|ies)|payroll|wages?\b|pension\s+contribution|donation|fine\s+payment|revenue\s+share|partner\s+billing|rebate\s+payable|management\s+fee\s+recharge)'
+
+vendor_propagation:
+  min_share: 0.5                    # share of a vendor's lines hit by a propagating rule
+  min_lines: 3
+
+label_vendor_exclusion:
+  # when labels carry include/exclusion_reason: vendors whose labelled lines are
+  # (almost) all excluded have their unlabelled lines excluded with the same reason
+  min_share: 0.9
+  min_lines: 2
+
+dates:
+  formats: ["%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d-%b-%y", "%d-%b-%Y", "%d.%m.%Y", "%Y%m%d", "%Y/%m/%d"]
+  dayfirst: true
+  valid_range: ["2000-01-01", "2030-12-31"]
+
+matching:
+  amount_tolerance: 0.01
+  po_amount_tolerance: 0.25
+  min_text_similarity: 70
+  min_supplier_similarity: 70
+
+suppliers:
+  fuzzy_threshold: 92               # rapidfuzz ratio on the cleaned core name
+  legal_suffixes: [pty, ltd, limited, cc, sa, inc, llc, gmbh, ag, bv, nv, srl, sas, sarl, spa, sro, plc, co, corp, corporation, company, kft, oy, ab, as, sp, zoo, sl, sa de cv, de cv, ltda, eireli, me, pvt, private, holdings, group, the, proprietary]
+
+items:
+  fuzzy_threshold: 93
+
+classification:
+  embedding_model: intfloat/multilingual-e5-base
+  query_prefix: 'query: '
+  passage_prefix: 'passage: '
+  supplier_smoothing: 0.35          # weight of the supplier's average category distribution
+  self_training: true               # zero-shot: retrain a text model on confident pseudo-labels
+  pseudo_label_quantile: 0.7
+  self_training_weight: 0.3
+  lexical_weight: 0.3               # char n-gram match to leaf names when no hints
+  lexical_weight_with_hints: 1.0    # word match to leaf names + config hints
+  llm:
+    enabled: auto                   # auto = use only if ANTHROPIC_API_KEY is set
+    model: claude-opus-5-5           # any Claude model id; cost scales with model choice
+    effort: low
+    batch_size: 60
+    max_unique_texts: 6000
+  # generic purchasing / SAP short-text abbreviations (not category names); expanded before
+  # zero-shot matching. Company configs can add their own under classification.abbreviations.
+  abbreviations:
+    repr: repair
+    rpr: repair
+    mntn: maintenance
+    maint: maintenance
+    mnt: maintenance
+    inst: install
+    instl: install
+    bld: build
+    cnvy: conveyor
+    convr: conveyor
+    elec: electrical
+    elect: electrical
+    mech: mechanical
+    hyd: hydraulic
+    hydr: hydraulic
+    pneu: pneumatic
+    assy: assembly
+    asm: assembly
+    brg: bearing
+    brgs: bearings
+    vlv: valve
+    sw: switch
+    swt: switch
+    cbl: cable
+    cabl: cable
+    flng: flange
+    stl: steel
+    ss: stainless steel
+    galv: galvanised
+    dril: drill
+    drl: drill
+    ug: underground
+    eq: equipment
+    equip: equipment
+    veh: vehicle
+    trk: truck
+    trlr: trailer
+    lub: lubricant
+    lube: lubricant
+    fltr: filter
+    flt: filter
+    pmp: pump
+    mtr: motor
+    gbx: gearbox
+    xfmr: transformer
+    trnsf: transformer
+    sprt: support
+    supp: supply
+    sv: service
+    svc: service
+    svcs: services
+    srv: service
+    srvc: service
+    hire: rental hire
+    tpt: transport
+    trnsp: transport
+    frt: freight
+    cons: consumables
+    consum: consumables
+    ppe: personal protective equipment
+    hdpe: plastic pipe
+    pvc: plastic
+    qty: quantity
+    pcs: pieces
+    lh: left hand
+    rh: right hand
+    dia: diameter
+    ln: length
+    lg: length
+    wd: width
+    ht: height
+    sz: size
+    pn: part number

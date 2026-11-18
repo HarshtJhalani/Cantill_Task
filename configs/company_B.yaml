@@ -1,0 +1,101 @@
+# Company B: metal packaging, 8 ERPs, 25 currencies, vendor IDs only
+company: B
+# Keyword hints per leaf, written from general knowledge of can making (not from the labels).
+# They enrich the tree descriptors used for zero-label matching.
+taxonomy_hints: &hints
+  "Ingot & Metal Premium": "aluminium ingot, primary aluminium, LME, Midwest premium, metal premium, billet, alloy"
+  "Can Body Stock (coil)": "aluminium coil for can bodies, body stock, 12oz 16oz 24oz, gauge, width, ID&OD, see spec, 3104 alloy, sheet coil"
+  "Can End Stock (coil)": "aluminium end stock coil, CES, 5182 alloy, lid coil, coated end stock"
+  "Tab Stock (coil)": "aluminium tab stock, tab coil, pull tab, ring pull"
+  "Internal Coatings & Compounds": "internal lacquer, inside spray, compound, sealing compound, BPA-NI coating, end lining"
+  "Inks & Varnishes": "printing ink, overvarnish, varnish, decorating ink, ink usage, base coat"
+  "Can Ends": "can ends, lids, CDL, 200 end, 202 end, SOT ends, silver lacquered ends"
+  "Pallets": "wooden pallet, plastic pallet, euro pallet, CHEP pallet"
+  "Top Frames & Layer Pads": "top frame, layer pad, tier sheet, slip sheet, separator sheet"
+  "Film, Strapping & Corner Boards": "stretch film, shrink wrap, strapping, corner board, edge protector, banding"
+  "Customs Clearance & Duties": "customs clearance, import duty, broker fee, customs entry"
+  "Courier & Postage": "courier, postage, express parcel, DHL, FedEx, UPS, shipping labels"
+  "Road & Sea Freight": "freight, trucking, haulage, container, ocean freight, transport, delivery charge"
+  "Gas & Propane": "natural gas, propane, LPG, gas supply"
+  "Electricity": "electricity, power supply, energy bill, kWh"
+  "Water & Sewer": "water supply, sewer, wastewater, water bill"
+  "PPE & First Aid": "gloves, safety glasses, safety shoes, helmet, hearing protection, first aid kit, workwear"
+  "Fire Protection": "fire extinguisher, sprinkler, fire alarm, fire suppression"
+  "Mechanical Spare Parts": "bearing, gear, shaft, seal, spring, roller, belt, die, tooling part, spare part"
+  "Electrical & Automation Parts": "sensor, PLC, motor, drive, cable, relay, switch, encoder, automation"
+  "Filters": "filter, filter element, cartridge, air filter, oil filter"
+  "Lubricants & Oils": "lubricant, oil, grease, hydraulic oil, coolant"
+  "Hoses, Pneumatics & Fittings": "hose, pneumatic cylinder, valve, fitting, coupling, air line"
+  "Tools & Shop Consumables": "hand tools, tooling, tape, markers, cleaning rags, abrasives, shop supplies"
+  "Waste Disposal & Recycling": "waste disposal, recycling, scrap removal, e-waste, skip hire"
+  "Cleaning": "cleaning services, janitorial, cleaning chemicals"
+  "Security": "security guards, alarm monitoring, access control"
+  "Equipment & Site Rental": "equipment rental, forklift hire, crane hire, rental"
+  "Repair & Maintenance Services": "repair service, maintenance service, field service, overhaul, calibration"
+  "End-user & Network Hardware": "laptop, desktop, server, network switch, router, printer toner, monitor, IT hardware"
+  "Licences & Subscriptions": "software licence, subscription, Microsoft, enrollment, SaaS, cloud, maintenance renewal"
+  "Voice & Data": "telephone, mobile, internet, data line, telecom"
+  "Consulting & IT Contractors": "consulting, contractor, statement of work, SOW, IT services, professional services"
+  "Audit, Legal & Advisory": "audit, legal fees, lawyer, tax advisory, accounting"
+  "Temporary Labour": "temporary staff, agency labour, temp workers"
+  "Training & Certification": "training course, certification, seminar"
+  "Occupational Health": "occupational health, medical exam, health screening"
+  "Travel & Expenses": "airfare, hotel, travel, accommodation, mileage"
+  "Canteen & Catering": "canteen, catering, food, coffee, meals"
+  "Office Supplies": "office supplies, paper, stationery, pens, envelopes"
+
+reporting_currency: USD
+data_dir: ../company_B
+
+taxonomy:
+  file: taxonomy_B.csv
+  hints: *hints
+
+sources:
+  - name: AP
+    file: invoice_lines.csv
+    role: primary
+    id: line_id
+    id_prefix: ""
+    columns:
+      amount: line_amount
+      currency: currency
+      fx_rate: currency_rate        # units of line currency per 1 reporting-currency unit
+      date: invoice_date
+      fallback_date: posting_date   # used when invoice_date is missing or implausible
+      supplier_id: vendor_id
+      description: line_description
+      material: material_number
+      po: po_number
+      po_line: po_line
+      quantity: quantity
+      invoice_number: invoice_number
+      invoice_line: invoice_line
+      system: source_system
+      gl_text: [gl_account_description]
+      context: [gl_account_description, supplier_type, po_type, document_type]
+    amount_is_gross: false
+
+fx:
+  file: fx_rates_usd.csv
+  currency: currency
+  month: month
+  rate: units_per_usd
+  sanity_ratio: 3                   # a given rate more than 3x off the table rate is treated as wrong
+
+dates:
+  formats: ["%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d.%m.%Y", "%Y%m%d"]
+  dayfirst: true
+  valid_range: ["2023-01-01", "2025-06-30"]
+
+duplicates:
+  # the same invoice line keyed twice in the AP file (same system, invoice, line, vendor, amount)
+  keys: [system, invoice_number, invoice_line, supplier_id, amount_raw, currency, description, material, quantity, gl_text, date]
+
+labels:
+  file: seed_labels.csv
+  id: line_id
+  category: [category_l1, category_l2, category_l3]
+  include: include
+  exclusion_reason: exclusion_reason
+  noisy: true
