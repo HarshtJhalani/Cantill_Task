@@ -1,0 +1,202 @@
+# Company C: US oil & gas producer (Bluestem), one AP invoice-line file, USD, 4-level tree.
+# Written at the blind test; no code changes.
+company: C
+reporting_currency: USD
+data_dir: ../../Blind_Test_Files/C       # relative to this file; or pass --data-dir
+
+taxonomy:
+  file: category_tree_C.csv              # level_1..level_4 detected by trailing number
+  # Keyword hints per leaf (leaf name -> words), from general oil & gas knowledge and the GL
+  # account wording seen in C's file. They feed the lexical + embedding match to the tree.
+  hints:
+    "Overall current": "compressor overhaul, top end overhaul, frame overhaul, engine major overhaul, COMP overhaul"
+    "Cranes & Heavy Lift": "crane, heavy lift, rigging, picker truck"
+    "Earthmoving Equipment": "dozer, excavator, backhoe, motor grader, earthmoving"
+    "Site Prep, Roads & Pads": "location and road repairs, lease roads, pits, pad construction, gravel, caliche, road maintenance, dirt work, reclamation, dozer work"
+    "Electrical Installation & Hookup": "electrical contractor, electrical service, R&M electrical svc, electrician, hookup, wiring install"
+    "Non-Destructive Testing (NDT)": "NDT, x-ray, ultrasonic testing, magnetic particle inspection"
+    "Welding Services": "welding, welder, welding truck, weld repair"
+    "FEED & Detailed Engineering": "engineering services, FEED, design engineering, drafting"
+    "Pipeline Construction Services": "pipeline construction, pipeline contractor, lay pipe, flowline install, ditching"
+    "Corrosion Monitoring & Cathodic Protection": "cathodic protection, corrosion monitoring, corrosion contract services, rectifier, anode, coupon"
+    "Pigging & ILI Services": "pigging, pig launcher, inline inspection, ILI"
+    "Gathering Line Pipe": "line pipe, poly pipe, gathering line, FPL pipe, pipeline equipment"
+    "Scaffolding Services": "scaffolding, insulation"
+    "OCTG - Casing": "casing, surface casing, production casing"
+    "OCTG - Tubing": "tubing, production tubing, ETAN tubing, tubing joints"
+    "Wellhead Equipment": "wellhead, R&M wellhead, tubing head, christmas tree, wellhead equipment"
+    "Packers, Plugs & Liners": "packer, bridge plug, liner hanger, retrievable packer, downhole equipment"
+    "Frac Pumping Services": "frac, fracturing, pressure pumping, stimulation"
+    "Wireline Logging Services": "wireline, logging, cased hole svc, perforating, perf, cased hole"
+    "Drilling Motors & Turbines": "mud motor, drilling motor"
+    "Fishing Tools & Services": "fishing tools, fishing job, overshot, spear"
+    "PDC Bits": "PDC bit, drill bit"
+    "Roller Cone Bits": "roller cone bit, tricone bit, rock bit"
+    "Slickwater Friction Reducers": "friction reducer, slickwater"
+    "Frac Gels & Crosslinkers": "guar, gel, crosslinker"
+    "Cement Blends & Additives": "cement, cement blend, class h, cement additives"
+    "Cementing Equipment & Pumping Services": "cementing services, cement pump truck, cementing equipment"
+    "Water-Based Mud (WBM)": "drilling fluid, mud, bentonite, barite, completion fluids"
+    "Day-Rate Contract Rigs": "drilling rig, rig day rate"
+    "Rig Moves & Heavy Haul": "rig move, mobilization and trucking, mob demob, heavy haul"
+    "Directional Services": "directional drilling, MWD"
+    "Fuel": "fuel, rig power and fuel, diesel delivery"
+    "Logging Services": "mud logging, geologist logging"
+    "Hot shots": "hot shot, hotshot delivery, expedited freight, delivery charge"
+    "Janitorial / HVAC / Building Svcs": "janitorial, HVAC, building maintenance, facility maintenance, cleaning service, pest control"
+    "Site & Physical Security": "security, guard, security services, access control, surveillance camera"
+    "Health / Welfare Benefits": "health insurance, other benefits, employee benefits, medical, welfare"
+    "Training & Certification Services": "training, education, certification, safety training, employee hire and screening, drug screen, background check"
+    "Property / Casualty / E&P Liability": "insurance, liability insurance, property insurance, accrued insurance"
+    "Furniture & Office Supplies": "office supplies, postage, paper, toner, furniture, office equipment, bath tissue, printers"
+    "Corporate / Field Office Leases": "office rent, office lease, field office, operating lease, other rents"
+    "Air / Hotel / Car Rental": "travel, airfare, hotel, car rental, travel and entertainment, charter services, meals"
+    "Commercial Tires": "tires, tire repair"
+    "Fleet Service & Repair": "auto repairs and maintenance, vehicle maintenance, truck repair, oil change, auto expense"
+    "Forklifts, Loaders & Generators": "forklift, loader, skid steer, telehandler, light tower"
+    "Diesel Fuel (Fleet & Equipment)": "diesel, gasoline, auto fuel, fuel card, fleet fuel"
+    "Pickup Trucks & SUVs": "pickup truck, vehicle lease, SUV, fleet vehicle"
+    "Servers & Storage": "server, storage, data center, compute"
+    "Laptops, Desktops & Peripherals": "laptop, desktop, monitor, MIS hardware, computer, peripherals, ethernet cable"
+    "Cloud Hosting (IaaS/SaaS)": "AWS, Azure, cloud hosting, SaaS"
+    "Security Software & Services": "cybersecurity, firewall, antivirus, security software"
+    "IT Outsourcing / Managed Services": "managed services IT, IT outsourcing, IT consulting, outside services consulting IT"
+    "Data & Information Subscriptions": "data subscriptions, dues and subscriptions, information services, data feed"
+    "Reservoir / Geoscience Software": "geoscience software, reservoir software, petrel, mapping software"
+    "ERP / Financial Systems": "ERP, accounting software, financial system"
+    "Office / Productivity Licenses": "software license fees, Microsoft, Office 365, productivity licenses, MIS software"
+    "Corporate Telecom & Data Lines": "telephone, internet, communications, telecom, data line, phone"
+    "Wireless / Satellite (Field Sites)": "SCADA communication, mobility, cellular, satellite, radio, telemetry"
+    "Motors, Relays & Switches": "electric motor, relay, switch, breaker, starter, VFD, electrical parts, I&E parts, contactor"
+    "Industrial & Site Lighting": "lighting, light fixture, LED, bulb"
+    "Bolts, Nuts & Fasteners": "bolt, nut, stud, washer, fasteners, screws"
+    "Site Consumables": "supplies, rags, absorbent, site consumables, field personnel supplies, ice, water, gloves"
+    "Mechanical Wear Parts": "bearing, belt, seal, gasket, o-ring, packing, sheave, mechanical parts"
+    "Hydraulic / Industrial Hose": "hose, hydraulic hose, coupling, camlock"
+    "Fire Suppression Equipment": "fire extinguisher, fire suppression"
+    "FR Clothing & Coveralls": "FR clothing, coveralls, uniform, flame resistant"
+    "Fall Protection & Safety Gear": "safety supplies, PPE, hard hat, safety glasses, harness, fall protection, environmental health and safety"
+    "H2S Monitors & Gas Detection": "H2S monitor, gas detector, gas monitor, calibration gas"
+    "Hand Tools": "wrench, hand tools, hammer, pipe wrench, tools and supplies"
+    "Power Tools": "drill, grinder, power tools, impact"
+    "Valve Actuators": "actuator, valve controller, motor valve"
+    "Leak Repair": "clamp, leak repair, repair clamp"
+    "Carbon Steel Pipe": "steel pipe, carbon steel pipe, pipe nipple"
+    "Flanges & Fittings": "flange, fitting, elbow, tee, union, swage, bushing, NPT, valves and fittings"
+    "Ball, Gate & Check Valves": "ball valve, gate valve, check valve, valve"
+    "Terminal Throughput Services": "terminal, throughput, storage"
+    "Contract Compression Services": "compressor rental, contract compression, compression rental"
+    "Maintenance": "R&M compressors, compressor parts and supplies, compressor maintenance, preventive maintenance, engine parts, other compressor materials, air compressor parts"
+    "Reciprocating Compressors": "reciprocating compressor, compressor unit, compressor swing, new unit startup"
+    "Gas Cooling": "cooler, R&M cooler, cooler parts, cooler rentals"
+    "Gas Drying": "dehydration, dehy, glycol, dehydration parts, TEG"
+    "Industrial & Equipment Lubricants": "compressor oil, lube oil, lubricant, oil, grease, antifreeze"
+    "NGL": "gas processing, cryo plant, amine plant, NGL, gas quality"
+    "Centrifugal & Reciprocating Pumps": "pump, centrifugal pump, triplex pump, transfer pump"
+    "Gas Turbines & Generator Sets": "engine, gas turbine, generator set, engine swing"
+    "Cable, Conduit & Wiring": "cable, conduit, wire, wiring"
+    "Switchgear & Transformers": "transformer, switchgear, panel, power distribution"
+    "Generators & Gensets": "generator, genset, rental generator"
+    "CO2 for EOR": "CO2, carbon dioxide"
+    "Nitrogen Services": "nitrogen"
+    "Automation & PLC Hardware": "PLC, automation, controller, I&E, instrumentation and electrical"
+    "SCADA & RTU Systems": "SCADA, RTU, telemetry, communication SCADA"
+    "Flow Meters & Measurement": "meter, measurement parts and supplies, chart, gas measurement, orifice, flow meter, meter fees, chart int svcs, measurement laboratory"
+    "Pressure & Temperature Sensors": "pressure gauge, transmitter, temperature sensor, gauge, thermometer"
+    "Term Labor Services": "contract lease operator, pumper, lease operator, MDS contract services"
+    "Contract Labor Services": "roustabout, contract labor, labor services, means labor svcs, contract services, water contract labor"
+    "Waste Disposal": "waste disposal, oil hauling, waste, fluid removal and disposal, vacuum truck"
+    "Structural & Pipe Fabrication": "fabrication, skid fabrication, pipe fabrication"
+    "Biocides": "biocide, bactericide, corrosion inhib and bio"
+    "Corrosion Inhibitors": "corrosion inhibitor, chemicals and treating, MDS chemicals, treating chemical"
+    "Scale Inhibitors": "scale inhibitor"
+    "Demulsifiers": "demulsifier, emulsion breaker"
+    "Foamer": "foamer, soap sticks"
+    "Foamer Combination": "foamer combination"
+    "H2S Elimination": "H2S scavenger, triazine, iron sponge"
+    "Methanol / Hydrate Inhibitors": "methanol, hydrate inhibitor, LOE methanol"
+    "Paraffin Inhibitors / Dispersants": "paraffin, hot oil treatment, dispersant, asphaltene, solvent"
+    "Clay Stabilizers": "clay stabilizer, KCL"
+    "Tension Reducer": "surfactant, tension reducer"
+    "General Maintenance": "R&M other surface, location maintenance, surface/site upkeep, general maintenance, facility repair, labor, mileage"
+    "Rental Equipment": "equipment rental, rental, rentals"
+    "Separators & Heater Treaters": "separator, heater treater, production equipment, gun barrel, free water knockout"
+    "Pressure Vessels": "pressure vessel, vessel"
+    "Storage Tanks": "tank, storage tank, R&M tanks, tank battery, frac tank"
+    "Crude Haul Contracts": "crude oil trucking, crude hauling, oil hauling"
+    "Produced/Flowback Water Trucking": "water hauling, water transfer, produced water trucking, vacuum truck, BBL hauling, water hauling and disposal"
+    "SWD (Saltwater Disposal) Wells": "saltwater disposal, SWD, disposal fee per BBL, 3rd party piped water, salt water disposal"
+    "Accounting / Audit / Tax": "accounting services, audit, tax preparation"
+    "Legal Services": "legal, litigation, attorney, legal services, regulatory legal expenses"
+    "Management Consulting": "consulting services, management consulting, professional services"
+    "Marketing / Government Affairs": "government affairs, lobbying, marketing, investor relations"
+    "Seismic Data & Interpretation": "seismic, geophysics, geology"
+    "Environmental Permitting & Compliance": "environmental, regulatory compliance, permitting, emission devices, air permit"
+    "Remediation / Spill Clean Up": "remediation, spill clean up, reclamation"
+    "Land/Title/Right-of-Way Services": "land services, title, right of way, ROW, damages, lease fees"
+    "API / Regulatory Inspection Services": "inspection services, testing and inspection, third party inspection"
+    "Field Contract Labor / Staffing": "field contract labor, staffing, temporary labor"
+    "Engineering & Technical Contractors": "consultants, engineering consultant, technical contractor, completion consultant"
+    "Grid Power Supply": "electricity, utilities electric, power bill, energy, compressor electric, utilities"
+    "Fuel Gas for Operations": "natural gas, fuel gas, gas purchase, other compressor utilities"
+    "Municipal / Utility Water Supply": "water utility, municipal water, fresh water"
+    "ESP Equipment & Cable": "ESP, electric submersible pump"
+    "Gas Lift Valves & Equipment": "gas lift"
+    "Plunger Lift Systems": "plunger, plunger lift, lubricator"
+    "Sucker Rods & Pumping Units": "sucker rod, rods and pump, pumping unit, artificial lift equipment, downhole pump, rod pump"
+    "Cement Plugs & Bridge Plugs": "plugging cementing services, cement plug, bridge plug"
+    "Plug & Abandonment Services": "plugging contractor, plugging turnkey, P&A, plugging, abandonment, plugging downhole tools, plugging surface rentals, plugging trucking and hauling"
+    "Flowback Equipment & Personnel": "flowback, well testing"
+    "Casing squeeze jobs": "casing squeeze, squeeze cement"
+    "Acid jobs or other downhole treatments": "acid job, acidizing, downhole treatment, chemicals and treating expense"
+    "CT unit": "coil tubing, coiled tubing, snubbing unit"
+    "Fishing and drill out tools": "downhole rental equipment, drill out, fishing tools rental"
+    "Swabbing": "swab, swabbing, slickline"
+    "BOP's, Frac tanks, Flowback iron, etc.": "surface rental, BOP, frac tank, flowback iron"
+    "Workover Rig Day-Rate Contracts": "workover unit, workover rig, completion unit, service rig, well servicing, R&M service rig and tubing"
+
+sources:
+  - name: AP
+    file: invoice_lines.csv
+    role: primary
+    id: line_id
+    id_prefix: ""
+    columns:
+      amount: line_amount_usd
+      date: invoice_date
+      fallback_date: status_date
+      supplier_name: supplier_name
+      description: [line_description, product_service_description]
+      material: product_service_code
+      quantity: quantity
+      invoice_number: invoice_number
+      invoice_line: invoice_line
+      status: status
+      gl_text: [gl_account_description]
+      context: [gl_account_description, invoice_description]
+    amount_is_gross: false
+    currency: USD
+
+dates:
+  formats: ["%m/%d/%Y", "%Y-%m-%d", "%m/%d/%y"]
+  dayfirst: false
+  valid_range: ["2020-01-01", "2026-12-31"]
+
+duplicates:
+  # one invoice has many lines with the same amount and quantity (e.g. per-BBL charges), so
+  # a repeat must match on the invoice line number too
+  keys: [invoice_number, invoice_line, supplier_name, amount_raw, description]
+
+extra_exclusion_rules:
+  - name: partner_billing_jib
+    reason: NON_PROCUREMENT
+    fields: [context]
+    pattern: '\bJIB\b|joint interest'
+  - name: revenue_tax_royalty_accounts
+    reason: NON_PROCUREMENT
+    fields: [gl_text]
+    pattern: 'revenue|royalty|ad valorem|severance tax|impact fee|other tax|debt issuance|penalty and fees|director fees|employee deductions|receivable|investor services|donations|community giving|public filing fees|deposits clearing|O&G App Properties'
+  - name: tax_lines
+    reason: NON_PROCUREMENT
+    fields: [description]
+    pattern: '^\W*ad valorem|inventory tax|netted against revenue'
